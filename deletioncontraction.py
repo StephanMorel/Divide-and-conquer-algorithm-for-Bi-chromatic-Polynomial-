@@ -4,7 +4,9 @@ from collections import deque
 import sympy
 
 
-memo = {}
+
+
+
 
 def cartesian_product_k2(graph):
     new_graph = {}
@@ -53,7 +55,7 @@ def add_additional_edges(graph):
             graph[u].append(v)
         if u not in graph[v]:
             graph[v].append(u)
-def draw_graph(graph, label_map):
+def draw_graph(graph, label_map):# I used this for drawing what graph I want to be tested
     G = nx.Graph()
     for vertex, neighbors in graph.items():
         for neighbor in neighbors:
@@ -65,7 +67,7 @@ def draw_graph(graph, label_map):
     plt.show()
 
 
-def chromatic_polynomial(G):
+def chromatic_polynomial(G): #deletion contraction algorthim 
     x = sympy.Symbol("x")
     stack = deque()
     stack.append(nx.MultiGraph(G, contraction_idx=0))
@@ -88,35 +90,12 @@ def chromatic_polynomial(G):
         
     return polynomial
 
-# Original graph (K_3)
-graph ={
-    1: [2],
-    2: [1, 3],
-    3: [2,4],
-    4:[3]
-    
-}
 
 
 
-import matplotlib.pyplot as plt
-import networkx as nx
 
-# Given graph
 
-# Create an empty graph
-# G = nx.Graph()
-
-# # Add edges to the graph from the adjacency list
-# for node, neighbors in graph.items():
-#     for neighbor in neighbors:
-#         G.add_edge(node, neighbor)
-
-# # Draw the graph
-# nx.draw(G, with_labels=True, node_color='lightblue', edge_color='gray', node_size=1500, font_size=20)
-# plt.show()
-
-def multi_chromatic_polynomial(graph):
+def multi_chromatic_polynomial(graph):# the K2 wreath product given a graph that converts a problem in the bichromatic case into the singular chroamtic case
     new_graph, label_map = cartesian_product_k2(graph)
 
     add_additional_edges(new_graph)
