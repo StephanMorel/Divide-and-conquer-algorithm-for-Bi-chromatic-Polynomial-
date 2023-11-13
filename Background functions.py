@@ -1,7 +1,13 @@
 import queue
 import networkx as nx
+import itertools
+from networkx.algorithms.flow import build_residual_network, edmonds_karp
+import networkx as nx
+from networkx.algorithms.connectivity import build_auxiliary_edge_connectivity
+from networkx.algorithms.connectivity.utils import build_auxiliary_node_connectivity
 def bfs_distance(graph, start, target):
-  
+  #for graphs with each edge having distance one bfs is used to calculate distance
+
     visited = set()
     distance = {v: float('inf') for v in graph}
     distance[start] = 0
@@ -76,15 +82,6 @@ def identify_components(filtered_graph):
 
     return graph1, graph2
 
-# Test
-filtered_graph = {
-    0: [1, 2],
-    1: [0],
-    2: [0],
-    3: [4],
-    4: [3]
-   
-}
 
 def identify_vertices(graph, v1, v2):
     if v1 not in graph or v2 not in graph:
@@ -185,25 +182,16 @@ def subtract_graphs(main_graph, to_remove):
     return main_graph
 
 
-graph = {
-    0: [(1,1)],
-    1: [(2,1)],
-    2: [(3,1)],
-    3: []
-}
+
 
 """
 Flow based cut algorithms
 """
-import itertools
 
-import networkx as nx
-from networkx.algorithms.connectivity import build_auxiliary_edge_connectivity
-from networkx.algorithms.connectivity.utils import build_auxiliary_node_connectivity
 
 # Define the default maximum flow function to use in all flow based
 # cut algorithms.
-from networkx.algorithms.flow import build_residual_network, edmonds_karp
+
 
 default_flow_func = edmonds_karp
 
