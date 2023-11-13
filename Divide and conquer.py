@@ -1,11 +1,16 @@
 import networkx as nx
+from sympy import symbols, expand
+import random
+import networkx as nx
+import matplotlib.pyplot as plt
+import random
 import matplotlib.pyplot as plt
 import ifnotclique as i
 import deletioncontraction as p
 import sympy as sp
 import copy
 import time
-    
+from math import comb
 def filter_graph_by_vertices(G, allowed_vertices):
     # Convert allowed_vertices list to set for faster lookups
     allowed_set = set(allowed_vertices)
@@ -16,43 +21,25 @@ def filter_graph_by_vertices(G, allowed_vertices):
 
     return filtered_graph
 def chromatic_polynomial_clique(n):
-    x = sp.symbols('x')
+    x = sp.symbols('x')#cliques are easy to calcualte the chromatic polynomial of
     polynomial = 1
     for i in range(n):
         polynomial *= (x - i)
     return polynomial
-# def chromatic_polynomial_clique(x):
-   
-#     n = symbols('x')
-#     polynomial = 1
-#     for i in range(x):
-#         term = (n - 2 * i) * (n - 2 * i - 1)
-#         polynomial *= term
-#     polynomial = sp.simplify(polynomial / (2**x))
-#     return polynomial
 
-# Test the function with an example:
 
 
 
 def is_clique(graph):
     n = len(graph)  # Number of vertices
     edge_count = sum(len(neighbors) for neighbors in graph.values()) // 2  # Number of edges
-
+    if edge_count!=comb(n,2):
+        return False
     # Check if the number of edges is equal to n choose 2
-    vertices = list(graph.keys())
-    n = len(vertices)
+   
 
-    # Loop over all pairs of vertices to ensure adjacency
-    for i in range(n):
-        for j in range(i + 1, n):
-            v1 = vertices[i]
-            v2 = vertices[j]
-
-            # If the vertices aren't adjacent in either direction
-            if v2 not in graph[v1] and v1 not in graph[v2]:
-                return False
     return True
+
 
 def remove_vertices(vertices_to_remove, graph_dict):
     """
@@ -76,7 +63,7 @@ def remove_vertices(vertices_to_remove, graph_dict):
     # Convert back to dictionary
     return nx.to_dict_of_lists(G)
 
-def undirected_to_digraph(undirected_graph):
+def undirected_to_digraph(undirected_graph):#this function is so the input graph can be used in the network flow algorthim
     digraph = {vertex: [] for vertex in undirected_graph}
     
     for vertex, edges in undirected_graph.items():
@@ -86,23 +73,6 @@ def undirected_to_digraph(undirected_graph):
             # In an undirected graph, both directions of an edge would be present
             # We don't need to add the reversed edge as it will be added when the larger vertex is the current vertex in the loop
                 
-    return digraph
-  #    
-graph1 ={
-    1: [2, 4],
-    2: [1, 3],
-    3: [2, 4],
-    4: [3, 1]
-}
-
-def undirected_to_digraph(graph):
-    digraph = {v: [] for v in graph.keys()}  # Initialize empty digraph
-    
-    for vertex, neighbors in graph.items():
-        for neighbor in neighbors:
-            if neighbor not in digraph[vertex]:  # Avoid adding duplicate edges
-                digraph[vertex].append(neighbor)
-    
     return digraph
 
 
@@ -141,32 +111,9 @@ def ChromaticPoly2(G, seperatingset, remainder=None):
        
 
 
-from sympy import symbols, expand
 
-# Define the variable
 x = symbols('x')
 
-# Define the polynomial
-
-
-# Expand the polynomial
-#expanded_polynomial = expand(ChromaticPoly(graph))
-
-
-
-#c4x**8/16 - 5*x**7/4 + 87*x**6/8 - 211*x**5/4 + 2433*x**4/16 - 513*x**3/2 + 230*x**2 - 165*x/2
-#c4 with an extra edge x**8/16 - 3*x**7/2 + 15*x**6 - 645*x**5/8 + 3999*x**4/16 - 3543*x**3/8 + 410*x**2 - 150*x
-#P3 x**6/8 - 11*x**5/8 + 47*x**4/8 - 97*x**3/8 + 12*x**2 - 9*x/2
-#P3 shared vertex edge  x**5/32 - x**4/4 + 23*x**3/32 - 7*x**2/8 + 3*x/8
-#p2 x**4/4 - 3*x**3/2 + 11*x**2/4 - 3*x/2
-#P3 WITH SQUIGGLE EDGE ADDED x**5/32 - 9*x**4/32 + 29*x**3/32 - 39*x**2/32 + 9*x/16
-#P3 with all squiggle x**4/16 - 5*x**3/16 + x**2/2 - x/4
-#P3 with double line edge x**4/16 - 3*x**3/8 + 11*x**2/16 - 3*x/8
-import random
-import networkx as nx
-import matplotlib.pyplot as plt
-
-import random
 
 def generate_random_graph():
     n = random.randint(12,12 )
@@ -195,19 +142,10 @@ def generate_random_graph():
     return graph
 
 
-
-def draw_graph(graph):
-    G = nx.Graph()
-
-    for node, neighbors in graph.items():
-        for neighbor in neighbors:
-            G.add_edge(node, neighbor)
-
-    nx.draw(G, with_labels=True, node_size=500, node_color='skyblue', font_size=15, width=2.0, alpha=0.6)
-    plt.show()
+#this is to test the time taken of the computation of random graphs chromatic polynomial in both algorthims
 
 graph = generate_random_graph()
-draw_graph(graph)
+
 print(graph)
 def print_graph_info(graph):
     # Number of vertices
@@ -234,7 +172,6 @@ end_cpu_time = time.process_time()
 print(f"sub_program2 took {end_cpu_time - start_cpu_time:.5f} seconds of CPU time")
 
 
-import networkx as nx
 
 def create_subgraphs_from_components(adjacency_list):
     # Create a graph from the adjacency list
@@ -270,4 +207,5 @@ def create_subgraphs_from_components(adjacency_list):
 #chromatic_polynomial=1
 #list_of_components=create_subgraphs_from_components(G):
 #for i in list_of_components:
-#chromatic_polynomial*=expand(ChromaticPoly(p.multi_chromatic_polynomial(i)))/2**len(graph)
+    #chromatic_polynomial*=expand(ChromaticPoly(p.multi_chromatic_polynomial(i)))/2**len(graph)
+#return chromatic_polynomial
